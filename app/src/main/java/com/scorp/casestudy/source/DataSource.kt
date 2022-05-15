@@ -36,7 +36,11 @@ class DataSource {
         initializeData()
     }
 
-    public fun fetch(next: String?, completionHandler: FetchCompletionHandler) {
+    public fun fetch(next: String?, completionHandler: FetchCompletionHandler, needRefresh: Boolean) {
+        if (needRefresh) {
+            people = listOf()
+            initializeData()
+        }
         val processResult = processRequest(next)
 
         Handler(Looper.getMainLooper()).postDelayed({

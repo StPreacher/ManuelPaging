@@ -14,8 +14,22 @@ import com.scorp.casestudy.source.Person
  *
  * mucahidd3@gmail.com
  */
-class PersonListAdapter(private var userList: List<Person>) :
+class PersonListAdapter() :
     RecyclerView.Adapter<PersonViewHolder>() {
+
+    private var personList: ArrayList<Person> = arrayListOf()
+
+    fun updateList(listToBeAdded: List<Person>) {
+        personList.addAll(listToBeAdded)
+    }
+
+    fun clearList() {
+        personList.clear()
+    }
+
+    fun getPersonList(): List<Person> {
+        return personList
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -25,8 +39,8 @@ class PersonListAdapter(private var userList: List<Person>) :
     }
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
-        holder.bind(userList[position])
+        holder.bind(personList[position])
     }
 
-    override fun getItemCount() = userList.size
+    override fun getItemCount() = personList.size
 }

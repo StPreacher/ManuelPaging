@@ -17,14 +17,14 @@ import javax.inject.Inject
 @HiltViewModel
 class PersonViewModel @Inject constructor(private val repository: PersonRepository) : ViewModel() {
 
-    private val response = MutableLiveData<Response>()
+    val response = MutableLiveData<Response>()
 
-    fun getPersonList(next: String?) : MutableLiveData<Response> {
-        val handler : FetchCompletionHandler = { fetchResponse, fetchError ->
+    fun loadPersonList(next: String?, needRefresh: Boolean) {
+        val handler: FetchCompletionHandler = { fetchResponse, fetchError ->
             response.postValue(Response(fetchResponse, fetchError))
         }
-        repository.fetchPersons(next, handler)
-        return response
+        repository.fetchPersons(next, handler, needRefresh)
+
     }
 
 }

@@ -12,8 +12,8 @@ import javax.inject.Inject
  */
 class PersonRepository @Inject constructor(private val source: DataSource) {
 
-    fun fetchPersons(next: String?, completionHandler: FetchCompletionHandler) {
-        source.fetch(next, completionHandler)
+    fun fetchPersons(next: String?, completionHandler: FetchCompletionHandler, needRefresh: Boolean) {
+        source.fetch(next, completionHandler, needRefresh)
     }
 
 }
