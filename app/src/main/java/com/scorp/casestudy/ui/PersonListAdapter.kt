@@ -6,6 +6,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.scorp.casestudy.R
 import com.scorp.casestudy.databinding.ItemPersonBinding
+import com.scorp.casestudy.extensions.clear
+import com.scorp.casestudy.extensions.removeSameItemsAndAddAll
 import com.scorp.casestudy.source.Person
 
 /**
@@ -17,10 +19,10 @@ import com.scorp.casestudy.source.Person
 class PersonListAdapter() :
     RecyclerView.Adapter<PersonViewHolder>() {
 
-    private var personList: ArrayList<Person> = arrayListOf()
+    private var personList: List<Person> = arrayListOf()
 
     fun updateList(listToBeAdded: List<Person>) {
-        personList.addAll(listToBeAdded)
+        personList.removeSameItemsAndAddAll(listToBeAdded)
     }
 
     fun clearList() {

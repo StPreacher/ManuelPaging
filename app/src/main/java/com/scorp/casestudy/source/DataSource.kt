@@ -90,6 +90,7 @@ class DataSource {
                 } else if (beginIndex == 0 && RandomUtils.roll(probability = Constants.emptyFirstResultsProbability)) {
                     fetchedPeople = arrayListOf()
                     responseNext = null
+                    error = FetchError(errorDescription = "Failed to fetch data from source")
                 }
                 response = FetchResponse(people = fetchedPeople, next = responseNext)
             }
