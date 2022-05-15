@@ -7,7 +7,7 @@
     android:id="@+id/baseConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.UserListActivity">
+    tools:context=".ui.PersonListActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/pullToRefreshLayout"

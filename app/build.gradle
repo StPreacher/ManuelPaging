@@ -56,6 +56,10 @@ dependencies {
     //Coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
 
+    //ViewModels delegation extensions for activity
+    implementation 'androidx.activity:activity-ktx:1.4.0'
+
+
 }
 
 kapt {
