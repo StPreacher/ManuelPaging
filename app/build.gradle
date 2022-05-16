@@ -59,6 +59,9 @@ dependencies {
     //ViewModels delegation extensions for activity
     implementation 'androidx.activity:activity-ktx:1.4.0'
 
+    //SharedPreferences
+    implementation "androidx.preference:preference-ktx:1.2.0"
+
 
 }
 

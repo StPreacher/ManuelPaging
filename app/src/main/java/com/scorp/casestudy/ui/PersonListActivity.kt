@@ -2,14 +2,19 @@ package com.scorp.casestudy.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.widget.NestedScrollView
 import com.scorp.casestudy.R
+import com.scorp.casestudy.SharedPreUtil
 import com.scorp.casestudy.base.BaseActivity
+import com.scorp.casestudy.const.Constant
 import com.scorp.casestudy.databinding.ActivityPersonListBinding
-import com.scorp.casestudy.extensions.*
+import com.scorp.casestudy.extensions.hide
+import com.scorp.casestudy.extensions.notifyDataWithSaveState
+import com.scorp.casestudy.extensions.removeSameItems
+import com.scorp.casestudy.extensions.show
 import com.scorp.casestudy.viewmodel.PersonViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,20 +29,17 @@ class PersonListActivity : BaseActivity<ActivityPersonListBinding>() {
 
     private val mViewModel: PersonViewModel by viewModels()
 
-    private lateinit var adapter: PersonListAdapter
+    private var adapter: PersonListAdapter = PersonListAdapter()
 
     private var next: String = ""
 
     companion object {
         const val TAG = "UserListActivity"
-
-        const val PAGE_MIN_ITEM_SIZE = 19
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        adapter = PersonListAdapter()
         bindView(R.layout.activity_person_list)
         loadPersonList(null, false)
         observe()
@@ -51,11 +53,25 @@ class PersonListActivity : BaseActivity<ActivityPersonListBinding>() {
         }
 
         mBinding.pullToRefreshLayout.setOnRefreshListener {
-            Log.d(TAG, "refresh layout")
-            adapter.clearList()
-            loadPersonList(null, true)
+            val lastRefreshTime: Long = SharedPreUtil.getLong(
+                Constant.STORE_REFRESH_TIME_KEY,
+                Constant.STORE_REFRESH_DEF_VALUE,
+                baseContext
+            )
+            val currentTime: Long = System.currentTimeMillis()
+            if ((lastRefreshTime == Constant.STORE_REFRESH_DEF_VALUE) || currentTime - lastRefreshTime >= Constant.REFRESH_INTERVAL) {
+                SharedPreUtil.putLong(Constant.STORE_REFRESH_TIME_KEY, currentTime, baseContext)
+                adapter.clearList()
+                loadPersonList(null, true)
+            } else {
+                mBinding.pullToRefreshLayout.isRefreshing = false
+                Toast.makeText(
+                    baseContext,
+                    "You must wait 10 seconds after your last refresh",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
-
     }
 
     private fun observe() {
@@ -65,7 +81,7 @@ class PersonListActivity : BaseActivity<ActivityPersonListBinding>() {
                 it.fetchResponse?.let { response -> adapter.updateList(response.people.removeSameItems()) }
                 it.fetchResponse?.next?.let { nextStr -> next = nextStr }
                 mBinding.userListRV.notifyDataWithSaveState(adapter)
-                if (adapter.getPersonList().size < PAGE_MIN_ITEM_SIZE) {
+                if (adapter.getPersonList().size < Constant.PAGE_MIN_ITEM_SIZE) {
                     mBinding.userListRV.hide()
                     mBinding.errorMsg.hide()
                     mBinding.progressBar.show()
